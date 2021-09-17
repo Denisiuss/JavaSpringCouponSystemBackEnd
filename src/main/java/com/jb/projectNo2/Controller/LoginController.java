@@ -32,11 +32,11 @@ public class LoginController {
         if (clientService != null){
             switch (clientType){
                 case Administrator:
-                    return new ResponseEntity<>((AdminService) clientService, HttpStatus.CREATED);
+                    //return new ResponseEntity<>((AdminService) clientService, HttpStatus.CREATED);
                 case Company:
-                    return new ResponseEntity<>((CompanyService) clientService, HttpStatus.CREATED);
+                    //return new ResponseEntity<>((CompanyService) clientService, HttpStatus.CREATED);
                 case Customer:
-                    return new ResponseEntity<>((CustomerService) clientService, HttpStatus.CREATED);
+                    //return new ResponseEntity<>((CustomerService) clientService, HttpStatus.CREATED);
             }
         }
         return null; // TODO: 18.09.2021 LoginExeption
