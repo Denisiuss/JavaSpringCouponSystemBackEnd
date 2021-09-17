@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 public class AdminController {
     AdminService adminService;
     private final JWTutil jwTutil;
-    private final LoginManager loginManager;
+    //private final LoginManager loginManager;
 
     /*
     @PostMapping("Login")
