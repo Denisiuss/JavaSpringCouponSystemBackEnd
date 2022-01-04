@@ -29,8 +29,9 @@ public class JWTutil {
     //the token need to get claims which is the information in hashcode
     public String generateToken(UserDetails userDetails){
         Map<String, Object> claims = new HashMap<>(); //create new hashmap for claims
-        claims.put("userPass", userDetails.getPassword());//insert password
+        //claims.put("userPass", userDetails.getPassword());//insert password
         claims.put("userType", userDetails.getUserType());//insert userType (role)
+        claims.put("userId", userDetails.getId());
         return createToken(claims, userDetails.getEmail());//send the subject (email)
     }
 
@@ -76,7 +77,7 @@ public class JWTutil {
     }
     //tester
 
-    /*public static void main(String[] args) {
+   /* public static void main(String[] args) {
         //create our instance of our user that the token will be created for him
         UserDetails admin = new UserDetails("admin@admin.com", "12345", "Admin");
         //use our new shiny JWTutils

@@ -3,6 +3,8 @@ package com.jb.projectNo2.CLR;
 import com.jb.projectNo2.Beans.Categories;
 import com.jb.projectNo2.Beans.Coupons;
 import com.jb.projectNo2.Beans.Customers;
+import com.jb.projectNo2.Exceptions.CouponException;
+import com.jb.projectNo2.Exceptions.CustomerUserException;
 import com.jb.projectNo2.Login.ClientType;
 import com.jb.projectNo2.Login.LoginManager;
 import com.jb.projectNo2.Services.CustomerService;
@@ -16,11 +18,12 @@ import org.springframework.stereotype.Component;
 
 import java.sql.Date;
 
-@Component
+//@Component
 @Order(3)
 @RequiredArgsConstructor
 public class CustomersTest implements CommandLineRunner {
-    private final CustomerService customerService;
+    private final LoginManager loginManager;
+    private CustomerService customerService;
     @Override
     public void run(String... args) throws Exception {
 
@@ -33,16 +36,15 @@ public class CustomersTest implements CommandLineRunner {
         Coupons coupon4 = new Coupons(9,2,Categories.Electronic,"free alcohol", "free alcohol from 12pm on fridays", now, inOneDay, 0, 7, "FREE");
 
         try {
-            CustomerService customerFacade = (CustomerService) LoginManager.getInstance().login("qwe@qwe", "1234", ClientType.Customer);
+            customerService = (CustomerService) loginManager.login("qwe@qwe", "1234", ClientType.Customer);
         } catch (Exception e){
             e.getMessage();
         }
 
-        System.out.println(ArtUtils.dottedLine);
 
         //SUCCESSFUL login
         try {
-            CustomerService customerFacade = (CustomerService) LoginManager.getInstance().login("Katy@mail.com", "147852", ClientType.Customer);
+            customerService = (CustomerService) loginManager.login("Katy@mail.com", "147852", ClientType.Customer);
         } catch (Exception e) {
             e.getMessage();
         }
@@ -51,7 +53,7 @@ public class CustomersTest implements CommandLineRunner {
         System.out.println(ArtUtils.dottedLine);
 
         //GET CUSTOMER ID
-        customerService.getCustomerId("Katy@mail.com","147852");
+        //customerService.getCustomerId("Katy@mail.com","147852");
 
         //PURCHASE COUPON
         System.out.println("Purchasing coupon "+ DateUtils.getLocalDateTime()+"\n");
@@ -61,8 +63,19 @@ public class CustomersTest implements CommandLineRunner {
 
         //purchase coupon if amount <1 and if coupon expired
         System.out.println("Trying to purchase coupons with amount<1 and expired coupon "+ DateUtils.getLocalDateTime()+"\n");
-        customerService.purchaseCoupon(coupon3);
-        customerService.purchaseCoupon(coupon4);
+        try {
+            customerService.purchaseCoupon(coupon3);
+        }catch (CouponException e){
+            System.out.println(e.getMessage());
+        }
+
+        try {
+            customerService.purchaseCoupon(coupon4);
+        }catch (CouponException e){
+            System.out.println(e.getMessage());
+        }
+        //customerService.purchaseCoupon(coupon3);
+        //customerService.purchaseCoupon(coupon4);
         System.out.println(ArtUtils.dottedLine);
 
         //GET CUSTOMER's COUPONS
@@ -72,7 +85,12 @@ public class CustomersTest implements CommandLineRunner {
 
         //GET CUSTOMER'S COUPONS BY CATEGORY
         System.out.println("Getting customer's coupons by category "+ DateUtils.getLocalDateTime()+"\n");
-        customerService.getCustomerCouponsByCategory(Categories.Beauty);
+        try {
+            customerService.getCustomerCouponsByCategory(Categories.Beauty);
+        }catch (CustomerUserException e){
+            System.out.println(e.getMessage());
+        }
+        //customerService.getCustomerCouponsByCategory(Categories.Beauty);
         System.out.println(ArtUtils.dottedLine);
 
         //GET CUSTOMER COUPONS BY MAX PRICE

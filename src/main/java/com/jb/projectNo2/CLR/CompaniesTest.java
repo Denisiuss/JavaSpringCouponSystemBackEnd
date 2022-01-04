@@ -15,11 +15,14 @@ import org.springframework.stereotype.Component;
 
 import java.sql.Date;
 
-@Component
+//@Component
 @Order(2)
 @RequiredArgsConstructor
 public class CompaniesTest implements CommandLineRunner {
-    private final CompanyService companyService;
+    private final LoginManager loginManager;
+
+
+
 
     @Override
     public void run(String... args) throws Exception {
@@ -35,20 +38,18 @@ public class CompaniesTest implements CommandLineRunner {
         Coupons coupon5 = new Coupons(0,2, Categories.Beauty,"20% discount", "get 20% discount only on wednesday", now, inOneDay, 7, 8, "15%%%%");
         Coupons coupon6 = new Coupons(0,2,Categories.Fashion,"Get 8% cashback", "8% cashback for our club members", now, inOneDay,10,11,"CASHBACK");
         Coupons coupon7 = new Coupons(0,2,Categories.Events,"2+1", "Buy 2 pizza and get one mor fo free", Date.valueOf("2020-06-15"), Date.valueOf("2021-06-28"), 8, 6, "1+1");
-        Coupons coupon8 = new Coupons(0,2,Categories.Electronic,"free cocktails", "free alcohol from 12pm on fridays", now, inOneDay, 0, 7, "FREE");
+        Coupons coupon8 = new Coupons(0,2,Categories.Electronic,"free cocktails", "free alcohol from 12pm on fridays", now, inOneDay, 0, 7, "https://images.pexels.com/photos/4255489/pexels-photo-4255489.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500");
         //login failed
-        try {
-            CompanyService companyFacade = (CompanyService) LoginManager.getInstance().login("vasss", "1234", ClientType.Company);
-        }catch (Exception e){
-            e.getMessage();
-        }
+
+        CompanyService companyService1 = (CompanyService) loginManager.login("vasss", "1234", ClientType.Company);
+
+
+
+        CompanyService companyService = (CompanyService) loginManager.login("pasta@email.com", "pasta321", ClientType.Company);
 
         //successful login
-        try{
-        CompanyService companyFacade1 = (CompanyService) LoginManager.getInstance().login("pasta@email.com", "pasta321", ClientType.Company);
-        }catch (Exception e){
-            e.getMessage();
-        }
+        //companyService = (CompanyService) loginManager.login("pasta@email.com", "pasta321", ClientType.Company);
+
         companyService.getCompanyId("pasta@email.com");
 
         System.out.println(ArtUtils.Company_Facade);
@@ -97,13 +98,14 @@ public class CompaniesTest implements CommandLineRunner {
         System.out.println(ArtUtils.dottedLine);
 
         //GET COMPANY DETAILS
-        System.out.println("Getting company details" + DateUtils.getLocalDateTime()+"\n");
+        System.out.println("Getting company details " + DateUtils.getLocalDateTime()+"\n");
         companyService.getCompanyDetails();
         System.out.println(ArtUtils.dottedLine);
 
         //DELETE COUPON
         System.out.println("Deleting coupon " + DateUtils.getLocalDateTime()+"\n");
         companyService.deleteCoupon(1);
+        System.out.println(ArtUtils.dottedLine);
 
     }
 }

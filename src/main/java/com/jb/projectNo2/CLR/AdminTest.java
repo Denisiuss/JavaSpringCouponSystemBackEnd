@@ -12,14 +12,17 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-@Component
+//@Component
 @Order(1)
 @RequiredArgsConstructor
 public class AdminTest implements CommandLineRunner {
-    private final AdminService adminService;
+    private final LoginManager loginManager;
+    private AdminService adminService;
 
     @Override
     public void run(String... args) throws Exception {
+
+
 
 
         Companies pizzaComp = Companies.builder()
@@ -45,14 +48,11 @@ public class AdminTest implements CommandLineRunner {
                 .password("147852")
                 .build();
 
-
-
-
         //login
-        AdminService adminService1 = (AdminService) LoginManager.getInstance().login("admin@admin.com", "adminnn", ClientType.Administrator);
+        adminService = (AdminService) loginManager.login("admin@admin.com", "adminnn", ClientType.Administrator);
         System.out.println(ArtUtils.dottedLine);
 
-        AdminService adminService2 = (AdminService) LoginManager.getInstance().login("admin@admin.com", "admin", ClientType.Administrator);
+        adminService = (AdminService) loginManager.login("admin@admin.com", "admin", ClientType.Administrator);
         System.out.println(ArtUtils.Admin_FACADE);
         System.out.println(ArtUtils.dottedLine);
 
