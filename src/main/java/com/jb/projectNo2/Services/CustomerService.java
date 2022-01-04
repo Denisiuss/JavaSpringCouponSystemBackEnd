@@ -3,6 +3,8 @@ package com.jb.projectNo2.Services;
 import com.jb.projectNo2.Beans.Categories;
 import com.jb.projectNo2.Beans.Coupons;
 import com.jb.projectNo2.Beans.Customers;
+import com.jb.projectNo2.Exceptions.CouponException;
+import com.jb.projectNo2.Exceptions.CustomerUserException;
 import com.jb.projectNo2.Repositories.CompanyRepo;
 import com.jb.projectNo2.Repositories.CouponsRepo;
 import com.jb.projectNo2.Repositories.CustomerRepo;
@@ -17,27 +19,29 @@ import java.util.Calendar;
 public class CustomerService extends ClientService {
     private long customer_id;
 
-    public CustomerService(CompanyRepo companyRepo, CouponsRepo couponsRepo, CustomerRepo customerRepo) {
-        super(companyRepo, couponsRepo, customerRepo);
-    }
 
     @Override
-    public boolean login(String email, String password) {
-        return customerRepo.existsByEmailAndPassword(email, password);
+    public boolean login(String email, String password)  {
+        try {
+            customer_id = customerRepo.findByEmailAndPassword(email, password).getId();
+            System.out.println("You have successfully logged in");
+            return true;
+        }catch (NullPointerException e){
+            System.out.println("wrong email or password");
+        }
+        return false;
     }
 
     /**
      * this method add coupon purchased by customer in MYSQL server
      * @param coupons
      */
-    public void purchaseCoupon(Coupons coupons){
+    public void purchaseCoupon(Coupons coupons) throws CouponException {
         if (coupons.getAmount()<1){
-            System.out.println("Coupon is out of stock");
-            return;
+            throw new CouponException("Coupon is out of stock");
         }
-        if (coupons.getEnd_date().before(Calendar.getInstance().getTime())){
-            System.out.println("Coupon is not available");
-            return;
+        if(coupons.getEnd_date().before(new java.sql.Date(System.currentTimeMillis()))){
+            throw new CouponException("Coupon has expired!");
         }
         couponsRepo.addCouponPurchase(customer_id, coupons.getId());
         coupons.setAmount(coupons.getAmount()-1);
@@ -64,7 +68,10 @@ public class CustomerService extends ClientService {
      * this method gets customer ID from MYSQL server
      * @return
      */
-    public ArrayList<Coupons> getCustomerCoupons(){
+    public ArrayList<Coupons> getCustomerCoupons() throws CustomerUserException{
+        if(customerRepo.findById(customer_id).getCoupons().isEmpty()){
+            throw new CustomerUserException("This customer has no coupons");
+        }
         ArrayList<Coupons> coupons = couponsRepo.findByCustomerId(customer_id);
         System.out.println(coupons);
         return coupons;
@@ -75,7 +82,7 @@ public class CustomerService extends ClientService {
      * @param categories
      * @return
      */
-    public ArrayList<Coupons> getCustomerCouponsByCategory(Categories categories){
+    public ArrayList<Coupons> getCustomerCouponsByCategory(Categories categories) throws CustomerUserException {
         ArrayList<Coupons> coupons = couponsRepo.findCustomerCouponsByCategory(customer_id, categories.toString());
         System.out.println(coupons);
         return coupons;
@@ -104,10 +111,9 @@ public class CustomerService extends ClientService {
 
     /**
      * this method deletes expired coupons from MYSQL server
-     * @param now
+     * @param date
      */
-    public void deleteCouponByDate(Date now) {
-        couponsRepo.deleteByEndDate();
-        System.out.println("Expired coupon deleted");
+    public void deleteCouponByDate(Date date) {
+        couponsRepo.deleteByEndDate(date);
     }
 }

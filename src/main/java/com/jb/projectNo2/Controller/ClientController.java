@@ -1,4 +1,4 @@
-package com.jb.projectNo2.Services;
+package com.jb.projectNo2.Controller;
 
 import com.jb.projectNo2.Repositories.CompanyRepo;
 import com.jb.projectNo2.Repositories.CouponsRepo;
@@ -7,13 +7,10 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 
-
-public abstract class ClientService {
-
+public abstract class ClientController {
     @Autowired
     protected CompanyRepo companyRepo;
     @Autowired
@@ -23,5 +20,4 @@ public abstract class ClientService {
 
 
     public abstract boolean login(String email, String password) throws SQLException, InterruptedException;
-
 }

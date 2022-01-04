@@ -3,9 +3,11 @@ package com.jb.projectNo2.Services;
 import com.jb.projectNo2.Beans.Categories;
 import com.jb.projectNo2.Beans.Companies;
 import com.jb.projectNo2.Beans.Coupons;
+import com.jb.projectNo2.Beans.Customers;
 import com.jb.projectNo2.Repositories.CompanyRepo;
 import com.jb.projectNo2.Repositories.CouponsRepo;
 import com.jb.projectNo2.Repositories.CustomerRepo;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
@@ -13,17 +15,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-//@RequiredArgsConstructor
 public class CompanyService extends ClientService {
     private long company_id;
 
-    public CompanyService(CompanyRepo companyRepo, CouponsRepo couponsRepo, CustomerRepo customerRepo) {
-        super(companyRepo, couponsRepo, customerRepo);
-    }
 
     @Override
     public boolean login(String email, String password) {
-        return companyRepo.findByEmailAndPassword(email, password);
+        try {
+            this.company_id = companyRepo.findByEmailAndPassword(email, password).getId();
+            System.out.println("You have successfully logged in");
+            return true;
+        }catch (NullPointerException e){
+            System.out.println("wrong email or password");
+        }
+        return false;
     }
 
     /**
@@ -49,9 +54,12 @@ public class CompanyService extends ClientService {
      */
     public long getCompanyId(String email){
         Companies companies = companyRepo.findByEmail(email);
-        company_id = companies.getId();
-        return company_id;
+        if (companies.getEmail().equals(email)){
+            company_id = companies.getId();
+            return company_id;
         }
+        return company_id=0;
+    }
 
     /**
      * this method update coupon in MYSQL server
@@ -77,6 +85,11 @@ public class CompanyService extends ClientService {
     public List<Coupons> getCompanyCoupons(){
         ArrayList<Coupons> coupons = couponsRepo.findByCompanyId(company_id);
         System.out.println(coupons);
+        return coupons;
+    }
+
+    public Coupons getCompanyCouponById(long id){
+        Coupons coupons = couponsRepo.findByCompanyIdAndId(company_id, id);
         return coupons;
     }
 
@@ -108,6 +121,7 @@ public class CompanyService extends ClientService {
      */
     public Companies getCompanyDetails(){
         Companies companies = companyRepo.findById(company_id);
+        System.out.println(companies);
         return companies;
     }
 

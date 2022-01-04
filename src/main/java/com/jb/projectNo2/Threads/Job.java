@@ -17,15 +17,17 @@ import java.sql.Date;
 @Component
 @EnableAsync
 @EnableScheduling
+@RequiredArgsConstructor
 public class Job {
-    @Autowired
-    CustomerService customerService;
+
+    private final CustomerService customerService;
 
     @Async
     @Scheduled(fixedRate = 1000*60)
     public void deleteCoupon(){
         try {
-            customerService.deleteCouponByDate(Date.valueOf(DateUtils.getLocalDateTime()));
+            customerService.deleteCouponByDate(new java.sql.Date(System.currentTimeMillis()));
+            System.out.println("Expired coupon deleted");
         } catch (Exception e){
             System.out.println(e.getMessage());
         }

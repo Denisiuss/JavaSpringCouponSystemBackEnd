@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 @Repository
 public interface CompanyRepo extends JpaRepository<Companies, Long> {
-    boolean findByEmailAndPassword (String email, String password);
+    Companies findByEmailAndPassword (String email, String password);
     Companies findByEmail (String email);
     Companies findById(long id);
     ArrayList<Companies> findAll();

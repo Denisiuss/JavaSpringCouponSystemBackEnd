@@ -20,6 +20,7 @@ public interface CouponsRepo extends JpaRepository<Coupons, Long> {
     ArrayList<Coupons> findByCompanyId (long company_id);
     ArrayList<Coupons> findByCompanyIdAndCategories (long company_id, Categories categories);
     ArrayList<Coupons> findByCompanyIdAndPriceLessThanEqual (long id, double maxPrice);
+    Coupons findByCompanyIdAndId(long company_id, long id);
     @Transactional
     @Modifying (clearAutomatically = true)
     @Query(value = "INSERT INTO couponsno2.customers_vs_coupons (customer_id, coupon_id) values(:customerId, :couponId)", nativeQuery = true)
@@ -31,15 +32,17 @@ public interface CouponsRepo extends JpaRepository<Coupons, Long> {
     ArrayList<Coupons> findByCategories(Categories categories);
     @Transactional
     @Modifying (clearAutomatically = true)
-    @Query(value = "SELECT * FROM couponsno2.coupons WHERE ID IN (SELECT COUPON_ID FROM couponsno2.customers_vs_coupons WHERE CUSTOMER_ID = :customerId) AND CATEGORIES = :category", nativeQuery = true)
-    ArrayList<Coupons> findCustomerCouponsByCategory(@Param("customerId") long customerId, @Param("category") String categories);
+    @Query(value = "SELECT * FROM couponsno2.coupons WHERE ID IN (SELECT COUPON_ID FROM couponsno2.customers_vs_coupons WHERE CUSTOMER_ID = :customerId) AND CATEGORIES = :categories", nativeQuery = true)
+    ArrayList<Coupons> findCustomerCouponsByCategory(@Param("customerId") long customerId, @Param("categories") String categories);
     @Transactional
     @Modifying (clearAutomatically = true)
     @Query (value = "SELECT * FROM couponsno2.coupons WHERE ID IN (SELECT COUPON_ID FROM couponsno2.customers_vs_coupons WHERE CUSTOMER_ID = :customerId) AND PRICE<= :maxPrice", nativeQuery = true)
     ArrayList<Coupons> findByCustomerIdAndMaxPrice (@Param("customerId") long customerId,@Param("maxPrice") double maxPrice);
     @Transactional
     @Modifying (clearAutomatically = true)
-    @Query (value = "DELETE FROM couponsno2.coupons WHERE END_DATE< NOW()", nativeQuery = true)
-    void deleteByEndDate(/*@Param("now") String now*/);
+    @Query (value = "DELETE FROM couponsno2.coupons WHERE END_DATE< NOW()"
+            //"Delete from couponsno2.coupons WHERE end_date<=CURRENT_DATE"
+            , nativeQuery = true)
+    void deleteByEndDate(@Param("now") Date now);
 
 }

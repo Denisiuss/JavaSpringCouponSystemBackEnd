@@ -6,25 +6,25 @@ import com.jb.projectNo2.Beans.Customers;
 import com.jb.projectNo2.Repositories.CompanyRepo;
 import com.jb.projectNo2.Repositories.CouponsRepo;
 import com.jb.projectNo2.Repositories.CustomerRepo;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Optional;
 
 @Service
-//@RequiredArgsConstructor
-
 public class AdminService extends ClientService {
 
 
-    public AdminService(CompanyRepo companyRepo, CouponsRepo couponsRepo, CustomerRepo customerRepo) {
-        super(companyRepo, couponsRepo, customerRepo);
-    }
-
     @Override
     public boolean login(String email, String password) throws SQLException, InterruptedException {
-        return email.toLowerCase().equals("admin@admin.com") & password.toLowerCase().equals("admin");
+        if(email.toLowerCase().equals("admin@admin.com") & password.toLowerCase().equals("admin")){
+            System.out.println("you have successfully logged in as Admin");
+            return true;
+        } else{
+            System.out.println("wrong email or password");
+            return false;
+        }
     }
 
 
@@ -133,10 +133,12 @@ public class AdminService extends ClientService {
     /**
      * this method gets customer by its ID in MYSQL server
      * @param id
+     * @return
      */
-    public void getOneCustomer(long id){
+    public Customers getOneCustomer(long id){
         Customers customers = customerRepo.findById(id);
         System.out.println(customers);
+        return customers;
         } //check
 
 }
