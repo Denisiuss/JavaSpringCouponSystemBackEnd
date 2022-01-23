@@ -23,11 +23,11 @@ public interface CouponsRepo extends JpaRepository<Coupons, Long> {
     Coupons findByCompanyIdAndId(long company_id, long id);
     @Transactional
     @Modifying (clearAutomatically = true)
-    @Query(value = "INSERT INTO couponsno2.customers_vs_coupons (customer_id, coupon_id) values(:customerId, :couponId)", nativeQuery = true)
+    @Query(value = "INSERT INTO customers_vs_coupons (customer_id, coupon_id) values(:customerId, :couponId)", nativeQuery = true)
     void addCouponPurchase(@Param("customerId") long customerId, @Param("couponId") long couponId);
     @Transactional
     @Modifying (clearAutomatically = true)
-    @Query(value = "SELECT * FROM couponsno2.coupons WHERE ID IN (SELECT COUPON_ID FROM couponsno2.customers_vs_coupons WHERE CUSTOMER_ID = :customerId)", nativeQuery = true)
+    @Query(value = "SELECT * FROM coupons WHERE ID IN (SELECT COUPON_ID FROM couponsno2.customers_vs_coupons WHERE CUSTOMER_ID = :customerId)", nativeQuery = true)
     ArrayList<Coupons> findByCustomerId (@Param("customerId") long customerId);
     ArrayList<Coupons> findByCategories(Categories categories);
     @Transactional
