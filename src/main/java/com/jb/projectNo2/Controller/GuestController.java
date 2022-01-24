@@ -1,5 +1,6 @@
 package com.jb.projectNo2.Controller;
 
+import com.jb.projectNo2.Beans.Customers;
 import com.jb.projectNo2.Services.GuestService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,5 +20,11 @@ public class GuestController {
     @GetMapping("oneCouponById/{id}")
     public ResponseEntity<?> getOneFullCoupon(@PathVariable long id){
         return new ResponseEntity<>(guestService.getOneFullCoupon(id), HttpStatus.ACCEPTED);
+    }
+
+    @PostMapping("registration")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void addCustomer (@RequestBody Customers customers){
+        guestService.addCustomer(customers);
     }
 }
