@@ -71,10 +71,10 @@ public class JWTutil {
         }
     }
 
-    public boolean validateToken(String token, UserDetails userDetails){
-        final String userEmail = extractEmail(token);
-        return (userEmail.equals(userDetails.getEmail()) && !isTokenExpired(token));
-        //return (!isTokenExpired(token));
+    public boolean validateToken(String token){
+        //final String userEmail = extractEmail(token);
+        //return (userEmail.equals(userDetails.getEmail()) && !isTokenExpired(token));
+        return (!isTokenExpired(token));
     }
     //tester
 

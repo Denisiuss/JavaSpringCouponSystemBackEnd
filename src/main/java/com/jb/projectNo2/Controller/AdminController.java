@@ -35,6 +35,16 @@ public class AdminController extends ClientController {
     @Autowired
     private LoginManager loginManager;
 
+    private HttpHeaders getHeaders(String token){
+        //create new userDetail and DI
+        UserDetails userDetails = new UserDetails();
+        userDetails.setEmail(jwtUtil.extractEmail(token));
+        userDetails.setUserType((String)jwtUtil.extractAllClaims(token).get("userType"));
+        //send ok with header of new token
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.set("Authorization",jwtUtil.generateToken(userDetails));
+        return httpHeaders;
+    }
 
     @Override
     public boolean login(String email, String password) throws SQLException, InterruptedException {
@@ -54,12 +64,28 @@ public class AdminController extends ClientController {
         return new ResponseEntity<>("Incorrect login", HttpStatus.UNAUTHORIZED);
     }
 
-    @PostMapping("addCompany")
+    /**
+     * Controller for adding new Company
+     * @param token JWt for authorization
+     * @param companies the Company we're adding
+     * @return httpStatus + new JWT
+     * @throws MalformedJwtException for wrong JWT
+     * @throws CompanyUserException if exists by name or email
+     */
+    @PostMapping("company/add")
+    public ResponseEntity<?> addCompany(@RequestHeader(name = "Authorization") String token, @RequestBody Companies companies) throws MalformedJwtException, CompanyUserException {
+        if (jwtUtil.validateToken(token)) {
+            adminService.addCompany(companies);
+        }
+        return ResponseEntity.ok().headers(getHeaders(token)).body("Company was added.");
+    }
+
+    /*@PostMapping("addCompany")
     @ResponseStatus(HttpStatus.CREATED)
     public void addCompany(@RequestBody Companies companies) {
 
         adminService.addCompany(companies);
-    }
+    }*/
 
     @PostMapping("updateCompany")
     @ResponseStatus(HttpStatus.ACCEPTED)
