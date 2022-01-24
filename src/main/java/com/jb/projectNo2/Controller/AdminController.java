@@ -72,7 +72,7 @@ public class AdminController extends ClientController {
      * @throws MalformedJwtException for wrong JWT
      * @throws CompanyUserException if exists by name or email
      */
-    @PostMapping("company/add")
+    @PostMapping("addCompany")
     public ResponseEntity<?> addCompany(@RequestHeader(name = "Authorization") String token, @RequestBody Companies companies) throws MalformedJwtException, CompanyUserException {
         if (jwtUtil.validateToken(token)) {
             adminService.addCompany(companies);
