@@ -120,7 +120,7 @@ public class AdminController extends ClientController {
     public void deleteCompany(@PathVariable long companyId) {adminService.deleteCompany(companyId);}
     */
 
-    @PostMapping("allCompanies")
+    @GetMapping("allCompanies")
     public ResponseEntity<?> getAllCompanies(@RequestHeader(name = "Authorization") String token) throws MalformedJwtException {
         if (jwtUtil.validateToken(token)) {
             return ResponseEntity.ok().headers(getHeaders(token)).body(adminService.getAllCompanies());
@@ -133,7 +133,7 @@ public class AdminController extends ClientController {
         return new ResponseEntity<>(adminService.getAllCompanies(), HttpStatus.ACCEPTED);
     }*/
 
-    @PostMapping("oneCompany/{companyId}")
+    @GetMapping("oneCompany/{companyId}")
     public ResponseEntity<?> getOneCompany(@RequestHeader(name = "Authorization") String token, @PathVariable long companyId) throws MalformedJwtException{
         if (jwtUtil.validateToken(token)) {
             return ResponseEntity.ok().headers(getHeaders(token)).body(adminService.getOneCompany(companyId));
@@ -185,7 +185,7 @@ public class AdminController extends ClientController {
     public void deleteCustomer(@PathVariable long customerId) {adminService.deleteCustomer(customerId);}
     */
 
-    @PostMapping("allCustomers")
+    @GetMapping("allCustomers")
     public ResponseEntity<?> getAllCustomers(@RequestHeader(name = "Authorization") String token) throws MalformedJwtException {
         if (jwtUtil.validateToken(token)) {
             return ResponseEntity.ok().headers(getHeaders(token)).body(adminService.getAllCustomers());
@@ -197,7 +197,7 @@ public class AdminController extends ClientController {
     public ResponseEntity<?> getAllCustomers(){return new ResponseEntity<>(adminService.getAllCustomers(), HttpStatus.ACCEPTED);}
     */
 
-    @PostMapping("oneCustomer/{customerId}")
+    @GetMapping("oneCustomer/{customerId}")
     public ResponseEntity<?> getOneCustomer(@RequestHeader(name = "Authorization") String token, @PathVariable long customerId) throws MalformedJwtException {
         if (jwtUtil.validateToken(token)) {
             return ResponseEntity.ok().headers(getHeaders(token)).body(adminService.getOneCustomer(customerId));
