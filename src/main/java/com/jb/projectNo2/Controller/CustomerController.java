@@ -59,7 +59,7 @@ public class CustomerController {
     }
 
     @PostMapping("purchaseCoupon")
-    public ResponseEntity<?> purchaseCoupon(@RequestHeader(name = "Authorization") String token, @RequestBody Coupons coupons) throws MalformedJwtException, CouponException {
+    private ResponseEntity<?> purchaseCoupon(@RequestHeader(name = "Authorization") String token, @RequestBody Coupons coupons) throws MalformedJwtException, CouponException {
         if (jwtUtil.validateToken(token)) {
             customerService.purchaseCoupon(coupons);
         }
@@ -77,7 +77,7 @@ public class CustomerController {
     }*/
 
     @GetMapping("myCoupons/{maxPrice}")
-    public ResponseEntity<?> getCouponsByMaxPrice(@RequestHeader(name = "Authorization") String token, @PathVariable double maxPrice) throws MalformedJwtException {
+    private ResponseEntity<?> getCouponsByMaxPrice(@RequestHeader(name = "Authorization") String token, @PathVariable double maxPrice) throws MalformedJwtException {
         if (jwtUtil.validateToken(token)) {
             return ResponseEntity.ok().headers(getHeaders(token)).body(customerService.getCustomerCouponsByMaxPrice(maxPrice));
         }
@@ -96,7 +96,7 @@ public class CustomerController {
     }*/
 
     @GetMapping("myCouponsByCategory/{categories}")
-    public ResponseEntity<?> getCustomerCouponsByCategory(@RequestHeader(name = "Authorization") String token, @PathVariable("categories") Categories categories) throws MalformedJwtException, CustomerUserException {
+    private ResponseEntity<?> getCustomerCouponsByCategory(@RequestHeader(name = "Authorization") String token, @PathVariable("categories") Categories categories) throws MalformedJwtException, CustomerUserException {
         if (jwtUtil.validateToken(token)) {
             return ResponseEntity.ok().headers(getHeaders(token)).body(customerService.getCustomerCouponsByCategory(categories));
         }
@@ -119,7 +119,7 @@ public class CustomerController {
     }*/
 
     @GetMapping("/getMyCoupons")
-    public ResponseEntity<?> getMyCoupons(@RequestHeader(name = "Authorization") String token) throws MalformedJwtException, CustomerUserException {
+    private ResponseEntity<?>getMyCoupons(@RequestHeader(name = "Authorization") String token) throws MalformedJwtException, CustomerUserException {
         if (jwtUtil.validateToken(token)) {
             return ResponseEntity.ok().headers(getHeaders(token)).body(customerService.getCustomerCoupons());
         }
@@ -142,7 +142,7 @@ public class CustomerController {
     }*/
 
     @GetMapping("/CustomerDetails")
-    public ResponseEntity<?> getCustomerDetails(@RequestHeader(name = "Authorization") String token) throws MalformedJwtException {
+    private ResponseEntity<?> getCustomerDetails(@RequestHeader(name = "Authorization") String token) throws MalformedJwtException {
         if (jwtUtil.validateToken(token)) {
             return ResponseEntity.ok().headers(getHeaders(token)).body(customerService.getCustomerDetails());
         }
