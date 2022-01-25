@@ -38,7 +38,6 @@ public class CustomerController {
         UserDetails userDetails = new UserDetails();
         userDetails.setEmail(jwtUtil.extractEmail(token));
         userDetails.setUserType((String)jwtUtil.extractAllClaims(token).get("userType"));
-        userDetails.setId((Long) jwtUtil.extractAllClaims(token).get("userId"));
         //send ok with header of new token
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set("Authorization",jwtUtil.generateToken(userDetails));
